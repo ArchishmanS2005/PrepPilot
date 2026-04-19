@@ -10,6 +10,7 @@ import logging
 # FastAPI tools
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 # SQLAlchemy query helpers
@@ -59,6 +60,14 @@ def error_response(message: str):
 
 # Create FastAPI app
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 @app.exception_handler(RequestValidationError)
@@ -532,11 +541,9 @@ def update_problem(problem_id: int, updated_problem: Problem):
                 detail=error_response("Problem not found")
             )
 
-        problem.title = updated_problem.title
-        problem.topic = updated_problem.topic
-        problem.difficulty = updated_problem.difficulty
-        problem.solved = updated_problem.solved
-        problem.time_taken = updated_problem.time_taken
+        update_data = updated_problem.model_dump()
+        for field_name, field_value in update_data.items():
+            setattr(problem, field_name, field_value)
 
         db.commit()
         db.refresh(problem)
@@ -589,6 +596,38 @@ def delete_problem(problem_id: int):
     except Exception as e:
         db.rollback()
         logger.error(f"Error deleting problem {problem_id}: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=error_response("Internal server error")
+        )
+
+    finally:
+        db.close()
+
+
+# Delete all problems from database
+@app.delete("/delete-all")
+def delete_all_problems():
+    db = SessionLocal()
+
+    try:
+        deleted_count = (
+            db.query(ProblemTable)
+            .delete(synchronize_session=False)
+        )
+
+        db.commit()
+
+        return success_response(
+            "All problems deleted successfully",
+            {
+                "deleted_count": deleted_count
+            }
+        )
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error deleting all problems: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail=error_response("Internal server error")
