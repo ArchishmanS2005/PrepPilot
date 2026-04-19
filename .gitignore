@@ -1,4 +1,51 @@
+# Python
 __pycache__/
-.env
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
 venv/
+
+# Local environment and secrets
+.env
+.env.*
+
+# Local database and logs
+*.db
+*.sqlite3
+*.log
+
+# Root frontend/dependency artifacts
 node_modules/
+build/
+.next/
+out/
+
+# React frontend artifacts
+preppilot-ui/node_modules/
+preppilot-ui/build/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Vercel/TypeScript artifacts
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Ignore accidental Next.js scaffold generated at repo root
+app/
+components/
+hooks/
+lib/
+public/
+styles/
+components.json
+next.config.mjs
+package.json
+pnpm-lock.yaml
+postcss.config.mjs
+tsconfig.json

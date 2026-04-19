@@ -1,66 +1,268 @@
-# 🚀 PrepPilot — DSA + AI Practice Tracker
+# PrepPilot
 
-## 📌 Overview
-PrepPilot is a backend-focused system that helps track DSA problems and uses AI to suggest what to practice next based on weak areas.
+A full-stack DSA practice tracker with analytics and AI-powered guidance.
 
-It combines **DSA logic + backend development + AI integration** to create a smart practice tracking system.
+PrepPilot helps you track solved problems, detect weak topics, and decide what to practice next using both rule-based logic and Gemini AI suggestions.
 
----
+## Why PrepPilot
 
-## ❗ Problem Statement
-Most students solve coding problems randomly without tracking:
-- weak topics
-- time spent
-- consistency
+Most students solve coding problems without a system. PrepPilot fixes that by giving you:
 
-There is no structured way to analyze performance.
+- Structured problem tracking
+- Topic-level analytics
+- Weak-topic prioritization
+- Actionable next-step suggestions
+- A simple UI with a landing page and one-click start
 
----
+## Features
 
-## 💡 Solution
-PrepPilot allows users to:
-- store problems
-- analyze topic-wise performance
-- identify weak areas
-- get AI-based suggestions for improvement
+### Problem management
 
----
+- Add new DSA problems
+- Edit existing problems
+- Delete a single problem
+- Delete all problems
+- Delete problems by topic
 
-## ⚙️ Features
+### Analysis and suggestions
 
-### Core Features
-- Add coding problems
-- View all problems (with pagination)
-- Update problems
-- Delete problems
-- Delete by topic
+- Topic coverage analysis
+- Weak-topic detection
+- Rule-based practice suggestion
+- AI coach suggestion (Gemini)
+- Automatic fallback suggestion if AI is unavailable
 
-### DSA Integration
-- Search (Linear search logic)
-- Sort (Custom sorting logic)
-- Analyze weak topics (HashMap logic)
+### Productivity tools
 
-### AI Features
-- AI-based suggestion using Gemini
-- Fallback suggestion if AI fails
+- Search by title or topic
+- Sort by time taken
+- Sort by difficulty (Easy -> Medium -> Hard)
+- Pagination support in backend
 
-### Backend Enhancements
-- Input validation (Pydantic)
-- Standard API response format
-- Logging (INFO / ERROR / WARNING)
-- Error handling (clean structured responses)
-- Pagination (page & limit)
+### Reliability
 
----
+- Input validation with Pydantic
+- Standardized JSON success and error responses
+- Logging for API activity and failures
+- SQLite persistence
 
-## 🧠 Tech Stack
+## Tech Stack
 
-- Backend: FastAPI
-- Language: Python
-- Database: SQLite + SQLAlchemy
-- AI: Gemini API
-- Validation: Pydantic
+### Backend
 
----
+- FastAPI
+- SQLAlchemy
+- SQLite
+- Pydantic
+- python-dotenv
+- google-genai (Gemini)
 
-## 📡 API Endpoints
+### Frontend
+
+- React (Create React App)
+- Custom CSS landing page + dashboard styling
+
+## Project Structure
+
+This is the core structure for the current app:
+
+```text
+PrepPilot/
+	main.py                # FastAPI app and all routes
+	models.py              # SQLAlchemy table model
+	schemas.py             # Pydantic validation schema
+	database.py            # DB engine/session setup
+	requirements.txt       # Python dependencies
+	preppilot-ui/
+		package.json
+		src/
+			index.js           # Landing page -> app flow
+			LandingPage.jsx    # Landing page component
+			LandingPage.css    # Landing page styles
+			App.js             # Main dashboard UI
+			index.css
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 18+ and npm
+
+### 1) Clone the repository
+
+```bash
+git clone https://github.com/ArchishmanS2005/PrepPilot.git
+cd PrepPilot
+```
+
+### 2) Backend setup
+
+```bash
+python -m venv .venv
+```
+
+PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Optional: create a .env file in the root for AI suggestions:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+Start backend:
+
+```bash
+uvicorn main:app --reload
+```
+
+Backend runs at:
+
+- http://127.0.0.1:8000
+- Swagger docs: http://127.0.0.1:8000/docs
+
+### 3) Frontend setup
+
+Open a new terminal:
+
+```bash
+cd preppilot-ui
+npm install
+npm start
+```
+
+Frontend runs at:
+
+- http://localhost:3000
+
+## App Flow
+
+1. Open the landing page.
+2. Click Get Started.
+3. Use the dashboard to add, update, search, sort, analyze, and delete problems.
+
+## API Reference
+
+### Health
+
+- GET / -> API health check
+
+### Problems
+
+- POST /add-problem -> Add a problem
+- GET /problems?page=1&limit=5 -> Get paginated problems
+- PUT /update-problem/{problem_id} -> Update a problem by id
+- DELETE /delete-problem/{problem_id} -> Delete one problem by id
+- DELETE /delete-all -> Delete all problems
+- DELETE /delete-topic/{topic} -> Delete all problems for an exact topic (case-insensitive)
+
+### Search and sort
+
+- GET /search?keyword=... -> Search title/topic
+- GET /sort?by=time -> Sort by time
+- GET /sort?by=difficulty -> Sort by difficulty
+
+### Insights and suggestions
+
+- GET /analyze -> Topic frequency + weak topics
+- GET /suggest -> Rule-based suggestion
+- GET /ai-suggest -> Gemini suggestion with fallback
+
+## Data Model
+
+Each problem contains:
+
+- id: integer (auto)
+- title: string (required, non-empty)
+- topic: string (required, non-empty)
+- difficulty: Easy | Medium | Hard
+- solved: boolean
+- time_taken: integer, >= 0
+
+## API Response Format
+
+Success response:
+
+```json
+{
+	"status": "success",
+	"message": "...",
+	"data": {}
+}
+```
+
+Error response:
+
+```json
+{
+	"status": "error",
+	"message": "..."
+}
+```
+
+## Example Requests
+
+### Add problem
+
+```bash
+curl -X POST "http://127.0.0.1:8000/add-problem" \
+	-H "Content-Type: application/json" \
+	-d '{
+		"title": "Two Sum",
+		"topic": "Array",
+		"difficulty": "Easy",
+		"solved": true,
+		"time_taken": 15
+	}'
+```
+
+### Analyze topics
+
+```bash
+curl "http://127.0.0.1:8000/analyze"
+```
+
+### Get AI suggestion
+
+```bash
+curl "http://127.0.0.1:8000/ai-suggest"
+```
+
+## Troubleshooting
+
+### Frontend cannot connect to backend
+
+- Make sure backend is running on port 8000.
+- Frontend uses REACT_APP_API_BASE_URL if set.
+- Default API base is http://127.0.0.1:8000.
+
+### AI suggestion does not use Gemini
+
+- Verify GEMINI_API_KEY is set in .env.
+- If key is missing or Gemini fails, fallback suggestion is returned by design.
+
+### Database reset
+
+- Use DELETE /delete-all from API or UI Delete All Problems button.
+
+## Notes
+
+- CORS is currently open for development convenience.
+- SQLite file preppilot.db is created automatically.
+
+## Author
+
+Built by ArchishmanS2005.
+
+If this project helps you, consider giving the repository a star.
