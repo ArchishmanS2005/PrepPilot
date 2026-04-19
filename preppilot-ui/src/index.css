@@ -1,21 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap");
-
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
 }
 
 body {
-  margin: 0;
-  font-family: "Space Grotesk", "Sora", sans-serif;
-  background: #0a1424;
-  color: #f8fafc;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	background: #0b1020;
+	color: #e5e7eb;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 button,
 input,
 select,
 textarea {
-  font: inherit;
+	font: inherit;
 }
