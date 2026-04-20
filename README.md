@@ -1,12 +1,28 @@
 # PrepPilot
 
-A full-stack DSA practice tracker with analytics and AI-powered guidance.
+PrepPilot is a full-stack DSA practice tracker that helps users log coding problems, analyze weak topics, and get rule-based plus AI-powered practice suggestions.
 
-PrepPilot helps you track solved problems, detect weak topics, and decide what to practice next using both rule-based logic and Gemini AI suggestions.
+The app has a lightweight landing page that opens into the main dashboard. The backend stores data in SQLite through FastAPI and SQLAlchemy, and the frontend is a React app built for simple day-to-day practice tracking.
 
-## Why PrepPilot
+## Project Summary for Future AI
 
-Most students solve coding problems without a system. PrepPilot fixes that by giving you:
+```text
+Project name: PrepPilot
+Type: Full-stack DSA practice tracker
+Goal: Track coding problems, surface weak topics, and suggest what to practice next.
+Frontend: React (Create React App) in preppilot-ui
+Frontend flow: LandingPage.jsx -> Get Started -> App.js dashboard
+Backend: FastAPI in main.py
+Database: SQLite via SQLAlchemy (preppilot.db)
+Validation: Pydantic
+AI: Gemini via google-genai with fallback suggestions when the API key is missing or AI fails
+Important files: main.py, models.py, schemas.py, database.py, preppilot-ui/src/index.js, preppilot-ui/src/LandingPage.jsx, preppilot-ui/src/App.js
+Privacy: do not commit .env, local databases, logs, or build artifacts
+```
+
+## What It Does
+
+PrepPilot fixes the common problem of random practice by giving you:
 
 - Structured problem tracking
 - Topic-level analytics
@@ -82,6 +98,17 @@ PrepPilot/
 			App.js             # Main dashboard UI
 			index.css
 ```
+
+## Safe Editing Rules
+
+If you are using another AI to work on this repository, these rules keep the project stable and private:
+
+- Keep the working dashboard logic in preppilot-ui/src/App.js unless a change explicitly targets the dashboard.
+- Keep the landing page in preppilot-ui/src/LandingPage.jsx, preppilot-ui/src/LandingPage.css, and preppilot-ui/src/index.js.
+- Keep backend behavior in main.py and the database model/schema files.
+- Store secrets only in .env and never commit them.
+- Do not commit local databases, build outputs, or dependency folders.
+- Preserve existing API route names unless you are intentionally changing the backend contract.
 
 ## Quick Start
 
@@ -260,6 +287,27 @@ curl "http://127.0.0.1:8000/ai-suggest"
 
 - CORS is currently open for development convenience.
 - SQLite file preppilot.db is created automatically.
+- The landing page is separate from the dashboard, so clicking Get Started opens the working app without changing the app logic.
+
+## Copy-Paste Brief for ChatGPT
+
+If you want to give this project to another AI later, paste this:
+
+```text
+I am working on PrepPilot, a full-stack DSA practice tracker.
+
+Backend: FastAPI + SQLite + SQLAlchemy in main.py.
+Frontend: React Create React App in preppilot-ui.
+Landing page flow: LandingPage.jsx -> Get Started -> App.js dashboard.
+Main features: add, edit, delete, delete-all, delete-topic, search, sort, analyze, suggest, ai-suggest.
+AI behavior: Gemini is used when GEMINI_API_KEY exists; otherwise the app returns a fallback suggestion.
+
+Important constraints:
+- Do not expose secrets.
+- Do not commit .env, local databases, logs, or build artifacts.
+- Preserve the existing App.js dashboard unless I explicitly ask for dashboard changes.
+- Keep backend route names stable unless I request a contract change.
+```
 
 ## Author
 
